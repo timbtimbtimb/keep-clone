@@ -1,10 +1,12 @@
 <script lang="ts">
+import { type HTMLAttributes } from 'vue';
+
 export default {
   props: {
     sideMenuIsSmall: Boolean
   },
   computed: {
-    sideMenuClass(): HTMLAttributes.class {
+    sideMenuClass(): HTMLAttributes['class'] {
       return {
         SideMenu: true,
         small: this.sideMenuIsSmall

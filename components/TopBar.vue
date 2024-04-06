@@ -2,6 +2,7 @@
 export default {
   props: {
     toggleSideMenuIsSmall: Function,
+    searchIsFocused: Boolean,
     setSearchIsFocused: Function
   }
 }
@@ -14,7 +15,7 @@ export default {
       <img src="/public/logo.png" alt="Keep" />
       <h1>Keep</h1>
     </a>
-    <SearchBar :setSearchIsFocused="setSearchIsFocused" />
+    <SearchBar :searchIsForcused="setSearchIsFocused" :searchIsFocused="searchIsFocused" :setSearchIsFocused="setSearchIsFocused" />
     <div class="left-buttons">
       <TopBarButton class="search-button" icon="search" title="Search" />
       <TopBarButton icon="refresh" title="Refresh" />

@@ -11,7 +11,7 @@ export default {
       this.sideMenuIsSmall = !this.sideMenuIsSmall
     },
     setSearchIsFocused(bool: boolean) {
-      console.log('searchIsFocused', bool)
+      this.searchIsFocused = bool
     }
   },
   computed: {
@@ -27,8 +27,12 @@ export default {
 
 <template>
   <div class="main">
-    <TopBar :sideMenuIsSmall="sideMenuIsSmall" :toggleSideMenuIsSmall="toggleSideMenuIsSmall"
-      :setSearchIsFocused="setSearchIsFocused" />
+    <TopBar
+      :sideMenuIsSmall="sideMenuIsSmall"
+      :toggleSideMenuIsSmall="toggleSideMenuIsSmall"
+      :setSearchIsFocused="setSearchIsFocused"
+      :searchIsFocused="searchIsFocused"
+    />
     <div class="Contents">
       <SideMenu :sideMenuIsSmall="sideMenuIsSmall" />
       <NuxtPage />

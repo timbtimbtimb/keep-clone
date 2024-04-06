@@ -1,4 +1,6 @@
 <script lang="ts">
+import type { HTMLAttributes } from 'vue';
+
 export default {
   props: {
     to: String,
@@ -10,7 +12,7 @@ export default {
     currentPage(): string {
       return this.$route.path
     },
-    className(): HTMLAttributes.class {
+    className(): HTMLAttributes['class'] {
       return {
         SideMenuButton: true,
         active: this.currentPage === this.to && 'active',

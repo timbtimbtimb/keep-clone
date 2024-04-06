@@ -3,7 +3,7 @@ export default {
   data() {
     return {
       className: {
-        [this.class]: this.class != null,
+        ...(this.class != null && { [this.class]: true }),
         TopBarButton: true
       }
     }
@@ -18,7 +18,7 @@ export default {
 </script>
 
 <template>
-  <div :class="this.className" @click="handleClick">
+  <div :class="className" @click="handleClick && handleClick()">
     <img :src="`/${icon}.svg`" :alt="title" />
   </div>
 </template>
