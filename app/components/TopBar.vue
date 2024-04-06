@@ -10,17 +10,18 @@ export default {
 
 <template>
   <div class="TopBar">
-    <TopBarButton icon="menu" title="Menu" :handleClick="toggleSideMenuIsSmall" />
+    <ImageButton icon="menu" title="Menu" :handleClick="toggleSideMenuIsSmall" />
     <a class="title" href="/">
       <img src="/public/logo.png" alt="Keep" />
       <h1>Keep</h1>
     </a>
-    <SearchBar :searchIsForcused="setSearchIsFocused" :searchIsFocused="searchIsFocused" :setSearchIsFocused="setSearchIsFocused" />
+    <SearchBar :searchIsForcused="setSearchIsFocused" :searchIsFocused="searchIsFocused"
+      :setSearchIsFocused="setSearchIsFocused" />
     <div class="left-buttons">
-      <TopBarButton class="search-button" icon="search" title="Search" />
-      <TopBarButton icon="refresh" title="Refresh" />
-      <TopBarButton icon="view" title="View" />
-      <TopBarButton icon="settings" title="Settings" />
+      <ImageButton class="search-button" icon="search" title="Search" />
+      <ImageButton icon="refresh" title="Refresh" />
+      <ImageButton icon="view" title="View" />
+      <ImageButton icon="settings" title="Settings" />
     </div>
   </div>
 </template>
@@ -45,10 +46,6 @@ export default {
   gap: 0.75rem;
   padding-right: 5rem;
   margin-left: -0.75rem;
-}
-
-.TopBar .title:hover {
-  text-decoration: underline;
 }
 
 .TopBar .title h1 {

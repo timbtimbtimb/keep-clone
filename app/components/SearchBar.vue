@@ -27,9 +27,9 @@ export default {
 
 <template>
   <div :class="className">
-    <TopBarButton icon="search" title="Search" />
+    <ImageButton icon="search" title="Search" />
     <input type="text" name="search" id="search" placeholder="Search" @blur="onBlur" @focus="onFocus">
-    <TopBarButton v-show="searchIsFocused" icon="close" title="Close" />
+    <ImageButton v-show="searchIsFocused" icon="close" title="Close" />
   </div>
 </template>
 

@@ -4,7 +4,7 @@ export default {
     return {
       className: {
         ...(this.class != null && { [this.class]: true }),
-        TopBarButton: true
+        ImageButton: true
       }
     }
   },
@@ -24,22 +24,26 @@ export default {
 </template>
 
 <style>
-.TopBarButton {
+.ImageButton {
   border-radius: 100%;
+  overflow: hidden;
   height: 100%;
   aspect-ratio: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-shrink: 0;
 }
 
-.TopBarButton:hover {
+.ImageButton:hover {
   border-radius: 100%;
   background-color: var(--hover-gray);
   cursor: pointer;
 }
 
-.TopBarButton img {
+.ImageButton img {
+  width: 50%;
+  height: 50%;
   filter: contrast(50%);
 }
 </style>

@@ -1,25 +1,25 @@
 <script lang="ts">
 export default {
-  data() {
+  data () {
     return {
       sideMenuIsSmall: false,
       searchIsFocused: false
     }
   },
   methods: {
-    toggleSideMenuIsSmall(): void {
+    toggleSideMenuIsSmall (): void {
       this.sideMenuIsSmall = !this.sideMenuIsSmall
     },
-    setSearchIsFocused(bool: boolean) {
+    setSearchIsFocused (bool: boolean) {
       this.searchIsFocused = bool
     }
   },
   computed: {
-    sideMenuClass() {
+    sideMenuClass () {
       return {
         SideMenu: true,
         small: this.sideMenuIsSmall
-      };
+      }
     }
   }
 }
@@ -27,15 +27,11 @@ export default {
 
 <template>
   <div class="main">
-    <TopBar
-      :sideMenuIsSmall="sideMenuIsSmall"
-      :toggleSideMenuIsSmall="toggleSideMenuIsSmall"
-      :setSearchIsFocused="setSearchIsFocused"
-      :searchIsFocused="searchIsFocused"
-    />
+    <TopBar :sideMenuIsSmall="sideMenuIsSmall" :toggleSideMenuIsSmall="toggleSideMenuIsSmall"
+      :setSearchIsFocused="setSearchIsFocused" :searchIsFocused="searchIsFocused" />
     <div class="Contents">
       <SideMenu :sideMenuIsSmall="sideMenuIsSmall" />
-      <NuxtPage />
+      <NuxtPage class="Page" />
     </div>
   </div>
 </template>
@@ -57,6 +53,11 @@ export default {
   text-decoration: none;
 }
 
+button {
+  border: none;
+  background-color: transparent;
+}
+
 html,
 body,
 .main {
@@ -64,9 +65,20 @@ body,
   height: 100vh;
 }
 
+
+html {
+  overflow-x: hidden;
+}
+
 .Contents {
   flex-direction: row;
   display: flex;
   height: calc(100% - var(--topBar-height))
+}
+
+.Page {
+  width: 100%;
+  padding: 3rem;
+  min-height: 100%;
 }
 </style>
