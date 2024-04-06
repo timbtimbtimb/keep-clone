@@ -1,0 +1,3 @@
+<head>
+  <link rel="icon" type="image/x-icon" href="/favicon.png" />
+</head>
