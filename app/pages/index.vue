@@ -1,8 +1,10 @@
 <script lang="ts">
+import type { NoteType } from '~/components/Notes.vue'
+
 export default {
   data () {
     return {
-      notes: [],
+      notes: [] as NoteType[],
       loading: true
     }
   },
@@ -35,14 +37,35 @@ export default {
         console.error('Error fetching notes:', error)
       }
     },
+    updateNote (data: NoteType) {
+      const index = this.notes.findIndex((note) => note.id === data.id)
+      if (index === -1) {
+        console.error(`Could not find note: ${JSON.stringify(data)}`)
+        return
+      }
+      this.notes[index] = {
+        ...data,
+        id: this.notes[index].id
+      }
+    },
+    addNote (data: NoteType) {
+      if (data.title === '' && data.content === '') {
+        return
+      }
+
+      this.notes.unshift({
+        ...data,
+        id: Math.round(Date.now())
+      })
+    }
   },
 }
 </script>
 
 <template>
   <div class="NotesPage">
-    <TakeANote />
-    <Notes v-if="!loading" :notes="notes" />
+    <TakeANote :addNote="addNote" />
+    <Notes v-if="!loading" :notes="notes" :updateNote="updateNote" />
   </div>
 </template>
 

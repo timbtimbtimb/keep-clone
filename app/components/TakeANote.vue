@@ -3,8 +3,7 @@ import type { HTMLAttributes } from 'vue'
 
 export default {
   props: {
-    onContentChange: Function,
-    onTitleChange: Function
+    addNote: { type: Function, required: true }
   },
   data () {
     return {
@@ -13,36 +12,34 @@ export default {
       content: ''
     }
   },
-  mounted() {
-    document.addEventListener('click', this.handleClickOutside);
+  mounted () {
+    document.addEventListener('click', this.handleClickOutside)
   },
-  beforeDestroy() {
-    document.removeEventListener('click', this.handleClickOutside);
+  beforeDestroy () {
+    document.removeEventListener('click', this.handleClickOutside)
   },
   methods: {
-    handleClickOutside(event: MouseEvent) {
+    handleClickOutside (event: MouseEvent) {
       const parentRef = this.$refs.parent as HTMLElement | undefined
       if (parentRef != null && !parentRef.contains(event.target as HTMLElement)) {
-        this.onClose()
+        this.onClose(false)
       }
     },
     onFocus () {
       this.focused = true
     },
-    onClose () {
+    onClose (addNote?: boolean) {
       this.focused = false
+
+      if (addNote !== false) {
+        this.addNote({
+          title: this.title,
+          content: this.content
+        })
+      }
+
       this.title = ''
       this.content = ''
-    },
-    onContentInput ({ target }: Event) {
-      if (target instanceof HTMLTextAreaElement) {
-        this.onContentChange != null && this.onContentChange(target.value)
-      }
-    },
-    onTitleInput ({ target }: Event) {
-      if (target instanceof HTMLTextAreaElement) {
-        this.onTitleChange != null && this.onTitleChange(target.value)
-      }
     }
   },
   computed: {
@@ -65,8 +62,7 @@ export default {
         name="title"
         id="title"
         placeholder="Title"
-        v-model="title"
-        @input="onContentInput" />
+        v-model="title" />
       <ImageButton icon="pin" title="Pin" />
     </div>
     <div class="content">
@@ -75,8 +71,7 @@ export default {
         id="content"
         v-model="content"
         placeholder="Take a note..."
-        @focus="onFocus"
-        @input="onContentInput"></textarea>
+        @focus="onFocus"></textarea>
       <ImageButton v-show="!focused" icon="checked" title="New list" />
       <ImageButton v-show="!focused" icon="paint" title="New note with drawing" />
       <ImageButton v-show="!focused" icon="image" title="New note with image" />
@@ -89,7 +84,7 @@ export default {
       <ImageButton icon="vertical-dots" title="New note with image" />
       <ImageButton icon="undo" title="New note with image" />
       <ImageButton icon="redo" title="New note with image" />
-      <button @click="onClose">Close</button>
+      <button @click="() => onClose()">Close</button>
     </div>
   </div>
 </template>

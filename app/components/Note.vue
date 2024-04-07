@@ -1,27 +1,69 @@
-<script>
+<script lang="ts">
+import type { NoteType } from './Notes.vue'
+
 export default {
   props: {
-    title: String,
+    note: { type: Object as () => NoteType, required: true },
+    updateNote: { type: Function, required: true },
+    content: String,
     column: Number
+  },
+  data () {
+    return {
+      backroundColor: false,
+      isOpen: false
+    }
+  },
+  computed: {
+    noteClass () {
+      return {
+        Note: true,
+        openned: this.isOpen
+      }
+    },
+    openWindowSize () {
+      return [
+        window.innerWidth / 2,
+        window.innerHeight / 2
+      ]
+    }
+  },
+  methods: {
+    open () {
+      this.isOpen = true
+    },
+    onClose () {
+      this.isOpen = false
+    },
+    formatContent (content: string) {
+      return content.replaceAll(/\n/g, '<br>')
+    }
   }
 }
 </script>
 
 <template>
-  <div class="Note">
-    <div>
-      <div class="content">
-        <h1>{{ title }}</h1>
-        <p>
-          <slot></slot>
-        </p>
+  <OpenNote
+    v-if="isOpen"
+    :parentRef="$refs.parent"
+    :onClose="onClose"
+    :note="note"
+    :content="content"
+    :animationDuration="300"
+    :size="openWindowSize"
+    :updateNote="updateNote" />
+  <div :class="noteClass">
+    <div ref="parent">
+      <div class="content" @click="open">
+        <h1>{{ note.title }}</h1>
+        <p v-html="formatContent(note.content)"></p>
       </div>
       <div class="buttons">
         <ImageButton icon="add-alert" title="New list" />
         <ImageButton icon="add-person" title="New list" />
         <ImageButton icon="palette" title="New note with drawing" />
         <ImageButton icon="archive" title="New note with image" />
-        <ImageButton icon="vertical-dots" title="New note with image" />
+        <ImageButton icon="vertical-dots" title="New note with image" floatingButton="Delete"/>
       </div>
     </div>
   </div>
@@ -29,18 +71,23 @@ export default {
 
 <style>
 .Note {
-  width: 250px;
   padding: 0.5rem;
   cursor: default;
+  user-select: none;
 }
 
 .Note>div {
+  background-color: white;
   border: 1px solid #d9d9d9;
   border-radius: 0.8rem;
   padding: 1rem 1rem 1rem 1rem;
   display: flex;
   gap: 1rem;
   flex-direction: column;
+}
+
+.Note.openned {
+  opacity: 0;
 }
 
 .Note:hover>div {

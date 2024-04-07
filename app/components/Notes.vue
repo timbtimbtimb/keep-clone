@@ -1,6 +1,5 @@
-
 <script lang="ts">
-interface NoteType {
+export interface NoteType {
   id: number,
   title: string,
   content: string
@@ -8,6 +7,7 @@ interface NoteType {
 
 export default {
   props: {
+    updateNote: { type: Function, required: true },
     notes: {
       type: Array as () => NoteType[],
       default: () => []
@@ -25,21 +25,21 @@ export default {
         return 0
       }
       this.numberOfColumns = Math.floor(parentRef.offsetWidth / 260)
-    }
+    },
   },
   computed: {
-    columns (): { notes: [string, string][]; length: number }[] {
+    columns (): { notes: NoteType[]; length: number }[] {
       if (this.numberOfColumns === 0) {
         return []
       }
-      const columns: { notes: [string, string][], length: number }[] = Array.from(
+      const columns: { notes: NoteType[], length: number }[] = Array.from(
         { length: this.numberOfColumns },
         () => ({ notes: [], length: 0 })
       )
       this.notes.forEach(({ id, title, content }) => {
         const lengths = columns.map(column => column.length)
         const columnIndex = lengths.findIndex(length => length === Math.min(...lengths))
-        columns[columnIndex].notes.push([title, content])
+        columns[columnIndex].notes.push({ id, title, content })
         columns[columnIndex].length += content.length
       })
 
@@ -59,7 +59,7 @@ export default {
 <template>
   <div class="Notes" ref="parent">
     <div v-for="({ notes }, i) in columns" :key="i" class="column">
-      <Note v-for="([title, content], j) in notes" :key="j" :title="title">{{ content }}</Note>
+      <Note v-for="(note, j) in notes" :key="j" :note="note" :updateNote="updateNote" />
     </div>
   </div>
 </template>
