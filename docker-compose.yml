@@ -1,0 +1,18 @@
+services:
+  app:
+    restart: unless-stopped
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - 3000:3000
+
+  server:
+    restart: unless-stopped
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    working_dir: /server
+    ports:
+      - 5000:5000
