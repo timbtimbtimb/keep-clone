@@ -1,6 +1,5 @@
 services:
   app:
-    restart: unless-stopped
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -9,7 +8,6 @@ services:
       - 3000:3000
 
   server:
-    restart: unless-stopped
     build:
       context: ./server
       dockerfile: Dockerfile
