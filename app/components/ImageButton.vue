@@ -1,25 +1,31 @@
 <script lang="ts">
 export default {
-  data() {
+  props: {
+    handleClick: { type: Function, default: () => {} },
+    icon: { type: String, default: '' },
+    title: { type: String, default: '' },
+    class: { type: String, default: '' }
+  },
+  data () {
     return {
       className: {
         ...(this.class != null && { [this.class]: true }),
         ImageButton: true
       }
     }
-  },
-  props: {
-    handleClick: Function,
-    icon: String,
-    title: String,
-    class: String
   }
 }
 </script>
 
 <template>
-  <div :class="className" @click="handleClick && handleClick()">
-    <img :src="`/${icon}.svg`" :alt="title" />
+  <div
+    :class="className"
+    @click="handleClick && handleClick()"
+  >
+    <img
+      :src="`/${icon}.svg`"
+      :alt="title"
+    >
   </div>
 </template>
 

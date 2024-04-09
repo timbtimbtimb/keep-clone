@@ -1,12 +1,16 @@
 <script lang="ts">
-import type { NoteType } from './Notes.vue'
+import type { NoteType } from './NotesList.vue'
 
 export default {
   props: {
-    note: { type: Object as () => NoteType, required: true },
-    updateNote: { type: Function, required: true },
-    content: String,
-    column: Number
+    note: {
+      type: Object as () => NoteType,
+      required: true
+    },
+    updateNote: {
+      type: Function,
+      required: true
+    }
   },
   data () {
     return {
@@ -17,7 +21,7 @@ export default {
   computed: {
     noteClass () {
       return {
-        Note: true,
+        NoteCard: true,
         openned: this.isOpen
       }
     },
@@ -45,38 +49,58 @@ export default {
 <template>
   <OpenNote
     v-if="isOpen"
-    :parentRef="$refs.parent"
-    :onClose="onClose"
+    :parent-ref="$refs.parent"
+    :on-close="onClose"
     :note="note"
-    :content="content"
-    :animationDuration="300"
+    :content="note.content"
+    :animation-duration="300"
     :size="openWindowSize"
-    :updateNote="updateNote" />
+    :update-note="updateNote"
+  />
   <div :class="noteClass">
     <div ref="parent">
-      <div class="content" @click="open">
+      <div
+        class="content"
+        @click="open"
+      >
         <h1>{{ note.title }}</h1>
-        <p v-html="formatContent(note.content)"></p>
+        <p v-html="formatContent(note.content)" />
       </div>
       <div class="buttons">
-        <ImageButton icon="add-alert" title="New list" />
-        <ImageButton icon="add-person" title="New list" />
-        <ImageButton icon="palette" title="New note with drawing" />
-        <ImageButton icon="archive" title="New note with image" />
-        <ImageButton icon="vertical-dots" title="New note with image" floatingButton="Delete"/>
+        <ImageButton
+          icon="add-alert"
+          title="New list"
+        />
+        <ImageButton
+          icon="add-person"
+          title="New list"
+        />
+        <ImageButton
+          icon="palette"
+          title="New note with drawing"
+        />
+        <ImageButton
+          icon="archive"
+          title="New note with image"
+        />
+        <ImageButton
+          icon="vertical-dots"
+          title="New note with image"
+          floating-button="Delete"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <style>
-.Note {
+.NoteCard {
   padding: 0.5rem;
   cursor: default;
   user-select: none;
 }
 
-.Note>div {
+.NoteCard>div {
   background-color: white;
   border: 1px solid #d9d9d9;
   border-radius: 0.8rem;
@@ -86,15 +110,15 @@ export default {
   flex-direction: column;
 }
 
-.Note.openned {
+.NoteCard.openned {
   opacity: 0;
 }
 
-.Note:hover>div {
+.NoteCard:hover>div {
   box-shadow: 0px 1px 3px #b1b1b1;
 }
 
-.Note h1 {
+.NoteCard h1 {
   font-size: 1.5rem;
   font-weight: normal;
   display: block;
@@ -103,18 +127,18 @@ export default {
   white-space: nowrap;
 }
 
-.Note p {
+.NoteCard p {
   font-size: 1.1rem;
 }
 
-.Note .content {
+.NoteCard .content {
   flex-grow: 1;
   gap: 1rem;
   display: flex;
   flex-direction: column;
 }
 
-.Note .buttons {
+.NoteCard .buttons {
   flex-shrink: 0;
   align-items: center;
   height: 2.5rem;
@@ -126,11 +150,11 @@ export default {
   justify-content: space-between;
 }
 
-.Note:hover .buttons {
+.NoteCard:hover .buttons {
   opacity: 1;
 }
 
-.Note .buttons button {
+.NoteCard .buttons button {
   text-align: right;
   font-size: 1.1rem;
   font-weight: 600;
@@ -143,7 +167,7 @@ export default {
   flex-shrink: 0;
 }
 
-.Note .buttons button:hover {
+.NoteCard .buttons button:hover {
   background-color: var(--hover-gray)
 }
 </style>

@@ -3,7 +3,10 @@ import type { HTMLAttributes } from 'vue'
 
 export default {
   props: {
-    addNote: { type: Function, required: true }
+    addNote: {
+      type: Function,
+      required: true
+    }
   },
   data () {
     return {
@@ -12,10 +15,19 @@ export default {
       content: ''
     }
   },
+  computed: {
+    className (): HTMLAttributes['class'] {
+      return {
+        TakeANote: true,
+        focused: this.focused,
+        'has-content': this.content !== ''
+      }
+    }
+  },
   mounted () {
     document.addEventListener('click', this.handleClickOutside)
   },
-  beforeDestroy () {
+  beforeUnmount () {
     document.removeEventListener('click', this.handleClickOutside)
   },
   methods: {
@@ -41,50 +53,84 @@ export default {
       this.title = ''
       this.content = ''
     }
-  },
-  computed: {
-    className (): HTMLAttributes['class'] {
-      return {
-        TakeANote: true,
-        focused: this.focused,
-        'has-content': this.content != ''
-      }
-    },
   }
 }
 </script>
 
 <template>
-  <div :class="className" ref="parent">
+  <div
+    ref="parent"
+    :class="className"
+  >
     <div class="title">
       <input
+        id="title"
+        v-model="title"
         type="text"
         name="title"
-        id="title"
         placeholder="Title"
-        v-model="title" />
-      <ImageButton icon="pin" title="Pin" />
+      >
+      <ImageButton
+        icon="pin"
+        title="Pin"
+      />
     </div>
     <div class="content">
       <textarea
-        name="content"
         id="content"
         v-model="content"
+        name="content"
         placeholder="Take a note..."
-        @focus="onFocus"></textarea>
-      <ImageButton v-show="!focused" icon="checked" title="New list" />
-      <ImageButton v-show="!focused" icon="paint" title="New note with drawing" />
-      <ImageButton v-show="!focused" icon="image" title="New note with image" />
+        @focus="onFocus"
+      />
+      <ImageButton
+        v-show="!focused"
+        icon="checked"
+        title="New list"
+      />
+      <ImageButton
+        v-show="!focused"
+        icon="paint"
+        title="New note with drawing"
+      />
+      <ImageButton
+        v-show="!focused"
+        icon="image"
+        title="New note with image"
+      />
     </div>
     <div class="buttons">
-      <ImageButton icon="add-alert" title="New list" />
-      <ImageButton icon="add-person" title="New list" />
-      <ImageButton icon="palette" title="New note with drawing" />
-      <ImageButton icon="archive" title="New note with image" />
-      <ImageButton icon="vertical-dots" title="New note with image" />
-      <ImageButton icon="undo" title="New note with image" />
-      <ImageButton icon="redo" title="New note with image" />
-      <button @click="() => onClose()">Close</button>
+      <ImageButton
+        icon="add-alert"
+        title="New list"
+      />
+      <ImageButton
+        icon="add-person"
+        title="New list"
+      />
+      <ImageButton
+        icon="palette"
+        title="New note with drawing"
+      />
+      <ImageButton
+        icon="archive"
+        title="New note with image"
+      />
+      <ImageButton
+        icon="vertical-dots"
+        title="New note with image"
+      />
+      <ImageButton
+        icon="undo"
+        title="New note with image"
+      />
+      <ImageButton
+        icon="redo"
+        title="New note with image"
+      />
+      <button @click="() => onClose()">
+        Close
+      </button>
     </div>
   </div>
 </template>

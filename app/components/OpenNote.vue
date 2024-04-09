@@ -1,18 +1,30 @@
 <script lang="ts">
-import type { NoteType } from './Notes.vue'
-
-
 export default {
   props: {
-    note: { type: Object as () => NoteType, required: true },
-    onClose: Function,
-    size: { type: Array, required: true },
-    animationDuration: { type: Number, required: true },
-    parentRef: { type: Object as () => unknown },
-    updateNote: { type: Function, required: true }
-  },
-  mounted () {
-    this.openAnimation()
+    note: {
+      type: Object,
+      required: true
+    },
+    onClose: {
+      type: Function,
+      required: true
+    },
+    size: {
+      type: Array,
+      required: true
+    },
+    animationDuration: {
+      type: Number,
+      required: true
+    },
+    parentRef: {
+      type: Object,
+      required: true
+    },
+    updateNote: {
+      type: Function,
+      required: true
+    }
   },
   data () {
     return {
@@ -22,6 +34,18 @@ export default {
       animationPending: false,
       animatedFrameStyle: {}
     }
+  },
+  computed: {
+    openNoteContainerClass () {
+      return {
+        OpenNote: true,
+        visible: this.backroundColor,
+        'not-moving': !this.animationPending
+      }
+    }
+  },
+  mounted () {
+    this.openAnimation()
   },
   methods: {
     setAnimatedFrame (parent: HTMLElement) {
@@ -93,38 +117,66 @@ export default {
       })
 
       setTimeout(() => {
-        this.onClose != null && this.onClose()
+        this.onClose?.()
         this.animationPending = false
       }, this.animationDuration)
     }
-  },
-  computed: {
-    openNoteContainerClass () {
-      return {
-        "OpenNote": true,
-        visible: this.backroundColor,
-        "not-moving": !this.animationPending
-      }
-    },
-  },
+  }
 }
 </script>
 
 <template>
-  <div :class=openNoteContainerClass @click="handleCloseClick" ref="noteRef">
-    <div ref="animatedFrame" class="animated-frame" :style="animatedFrameStyle">
-      <div v-if="!animationPending" class="content-container">
-        <input type="text" v-model="title" />
-        <textarea v-model="content"></textarea>
+  <div
+    ref="noteRef"
+    :class="openNoteContainerClass"
+    @click="handleCloseClick"
+  >
+    <div
+      ref="animatedFrame"
+      class="animated-frame"
+      :style="animatedFrameStyle"
+    >
+      <div
+        v-if="!animationPending"
+        class="content-container"
+      >
+        <input
+          v-model="title"
+          type="text"
+        >
+        <textarea v-model="content" />
         <div class="buttons">
-          <ImageButton icon="add-alert" title="New list" />
-          <ImageButton icon="add-person" title="New list" />
-          <ImageButton icon="palette" title="New note with drawing" />
-          <ImageButton icon="archive" title="New note with image" />
-          <ImageButton icon="vertical-dots" title="New note with image" />
-          <ImageButton icon="undo" title="New note with image" />
-          <ImageButton icon="redo" title="New note with image" />
-          <button @click="closeAnimation">Close</button>
+          <ImageButton
+            icon="add-alert"
+            title="New list"
+          />
+          <ImageButton
+            icon="add-person"
+            title="New list"
+          />
+          <ImageButton
+            icon="palette"
+            title="New note with drawing"
+          />
+          <ImageButton
+            icon="archive"
+            title="New note with image"
+          />
+          <ImageButton
+            icon="vertical-dots"
+            title="New note with image"
+          />
+          <ImageButton
+            icon="undo"
+            title="New note with image"
+          />
+          <ImageButton
+            icon="redo"
+            title="New note with image"
+          />
+          <button @click="closeAnimation">
+            Close
+          </button>
         </div>
       </div>
     </div>

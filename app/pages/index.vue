@@ -1,5 +1,6 @@
 <script lang="ts">
-import type { NoteType } from '~/components/Notes.vue'
+import type { NoteType } from '~/components/NotesList.vue'
+import graphQLRequest from '~/utils/graphQLRequest'
 
 export default {
   data () {
@@ -22,50 +23,77 @@ export default {
           }
         }
       `
-      try {
-        const response = await fetch('http://localhost:5000/graphql', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ query }),
-        })
-        const { data: { notes } } = await response.json()
-        this.notes = notes
-        this.loading = false
-      } catch (error) {
-        console.error('Error fetching notes:', error)
-      }
+      const { notes } = await graphQLRequest(query) as { notes: NoteType[] }
+      this.notes = notes
+      this.loading = false
     },
-    updateNote (data: NoteType) {
+    async updateNote (data: NoteType) {
       const index = this.notes.findIndex((note) => note.id === data.id)
       if (index === -1) {
-        console.error(`Could not find note: ${JSON.stringify(data)}`)
+        console.error(`Could not find note ${data.id}`)
         return
       }
-      this.notes[index] = {
-        ...data,
-        id: this.notes[index].id
+
+      const query = `
+        mutation{
+          updateNote(
+            id: ${data.id}
+            title: "${data.title}",
+            content: "${data.content}",
+          ), {
+            id, title, content
+          }
+        }
+      `
+
+      try {
+        const response = await graphQLRequest(query) as { updateNote: NoteType }
+        this.notes[index] = {
+          ...response.updateNote
+        }
+        console.log(`Updated note ${data.id}`)
+      } catch (error) {
+        console.error(`Failed to update note ${data.id}: ${String(error)}`)
       }
     },
-    addNote (data: NoteType) {
+    async addNote (data: NoteType) {
       if (data.title === '' && data.content === '') {
         return
       }
 
-      this.notes.unshift({
-        ...data,
-        id: Math.round(Date.now())
-      })
+      const query = `
+        mutation{
+          addNote(
+            title: "${data.title}",
+            content: "${data.content}",
+          ), {
+            id, title, content
+          }
+        }
+      `
+
+      try {
+        const response = await graphQLRequest(query) as { addNote: NoteType }
+        this.notes.unshift({
+          ...response.addNote
+        })
+        console.log(`Added note ${response.addNote.id}`)
+      } catch (error) {
+        console.error(`Failed to add note: ${String(error)}`)
+      }
     }
-  },
+  }
 }
 </script>
 
 <template>
   <div class="NotesPage">
-    <TakeANote :addNote="addNote" />
-    <Notes v-if="!loading" :notes="notes" :updateNote="updateNote" />
+    <TakeANote :add-note="addNote" />
+    <NotesList
+      v-if="!loading"
+      :notes="notes"
+      :update-note="updateNote"
+    />
   </div>
 </template>
 

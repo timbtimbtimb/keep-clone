@@ -6,14 +6,6 @@ export default {
       searchIsFocused: false
     }
   },
-  methods: {
-    toggleSideMenuIsSmall (): void {
-      this.sideMenuIsSmall = !this.sideMenuIsSmall
-    },
-    setSearchIsFocused (bool: boolean) {
-      this.searchIsFocused = bool
-    }
-  },
   computed: {
     sideMenuClass () {
       return {
@@ -21,16 +13,28 @@ export default {
         small: this.sideMenuIsSmall
       }
     }
+  },
+  methods: {
+    toggleSideMenuIsSmall (): void {
+      this.sideMenuIsSmall = !this.sideMenuIsSmall as boolean
+    },
+    setSearchIsFocused (bool: boolean) {
+      this.searchIsFocused = bool
+    }
   }
 }
 </script>
 
 <template>
   <div class="main">
-    <TopBar :sideMenuIsSmall="sideMenuIsSmall" :toggleSideMenuIsSmall="toggleSideMenuIsSmall"
-      :setSearchIsFocused="setSearchIsFocused" :searchIsFocused="searchIsFocused" />
+    <TopBar
+      :side-menu-is-small="sideMenuIsSmall"
+      :toggle-side-menu-is-small="toggleSideMenuIsSmall"
+      :set-search-is-focused="setSearchIsFocused"
+      :search-is-focused="searchIsFocused"
+    />
     <div class="Contents">
-      <SideMenu :sideMenuIsSmall="sideMenuIsSmall" />
+      <SideMenu :side-menu-is-small="sideMenuIsSmall" />
       <NuxtPage class="Page" />
     </div>
   </div>
@@ -64,7 +68,6 @@ body,
   width: 100vw;
   height: 100vh;
 }
-
 
 html {
   overflow-x: hidden;

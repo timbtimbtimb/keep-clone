@@ -1,27 +1,62 @@
 <script lang="ts">
 export default {
   props: {
-    toggleSideMenuIsSmall: Function,
-    searchIsFocused: Boolean,
-    setSearchIsFocused: Function
+    toggleSideMenuIsSmall: {
+      type: Function,
+      required: true
+    },
+    searchIsFocused: {
+      type: Boolean,
+      required: true
+    },
+    setSearchIsFocused: {
+      type: Function,
+      required: true
+    }
   }
 }
 </script>
 
 <template>
   <div class="TopBar">
-    <ImageButton icon="menu" title="Menu" :handleClick="toggleSideMenuIsSmall" />
-    <a class="title" href="/">
-      <img src="/public/logo.png" alt="Keep" />
+    <ImageButton
+      icon="menu"
+      title="Menu"
+      :handle-click="toggleSideMenuIsSmall"
+    />
+    <a
+      class="title"
+      href="/"
+    >
+      <img
+        src="/public/logo.png"
+        alt="Keep"
+      >
       <h1>Keep</h1>
     </a>
-    <SearchBar :searchIsForcused="setSearchIsFocused" :searchIsFocused="searchIsFocused"
-      :setSearchIsFocused="setSearchIsFocused" />
+    <SearchBar
+      :search-is-forcused="setSearchIsFocused"
+      :search-is-focused="searchIsFocused"
+      :set-search-is-focused="setSearchIsFocused"
+    />
     <div class="left-buttons">
-      <ImageButton class="search-button" icon="search" title="Search" />
-      <ImageButton icon="refresh" title="Refresh" />
-      <ImageButton icon="view" title="View" />
-      <ImageButton icon="settings" title="Settings" />
+      <ImageButton
+        class="search-button"
+        icon="search"
+        title="Search"
+      />
+      <ImageButton
+        icon="refresh"
+        title="Refresh"
+      />
+      <ImageButton
+        icon="view"
+        title="View"
+      />
+      <ImageButton
+        icon="settings"
+        title="Settings"
+      />
     </div>
   </div>
 </template>

@@ -4,6 +4,13 @@
   "compilerOptions": {
     "strict": true,
     "target": "esnext",
-    "module": "esnext"
-  }
+    "module": "esnext",
+    "jsx": "preserve"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.d.ts",
+    "**/*.tsx",
+    "**/*.vue"
+  ]
 }

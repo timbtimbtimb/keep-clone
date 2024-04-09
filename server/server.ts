@@ -1,20 +1,20 @@
-const express = require('express')
-const cors = require('cors');
-const { graphqlHTTP } = require('express-graphql');
-const {
-  graphQLSchema,
+import express from 'express'
+import cors from 'cors'
+import { createHandler } from 'graphql-http/lib/use/express'
+import {
   GraphQLObjectType,
   GraphQLSchema,
   GraphQLString,
   GraphQLList,
   GraphQLInt,
   GraphQLNonNull
-} = require('graphql')
+} from 'graphql'
+
 const app = express()
 
 interface NoteType {
-  id: number,
-  title: string,
+  id: number
+  title: string
   content: string
 }
 
@@ -42,7 +42,7 @@ function generateNotes (): NoteType[] {
 
 const notes = generateNotes()
 
-const NoteType = new GraphQLObjectType({
+const GraphQLNoteType = new GraphQLObjectType({
   name: 'Note',
   description: 'This represents a note with a title',
   fields: () => ({
@@ -57,12 +57,15 @@ const RootQueryType = new GraphQLObjectType({
   description: 'Root query',
   fields: () => ({
     notes: {
-      type: new GraphQLList(NoteType),
+      type: new GraphQLList(GraphQLNoteType),
       description: 'List of notes',
-      resolve: () => notes
+      resolve: () => {
+        console.log('Requested all notes.')
+        return notes
+      }
     },
     note: {
-      type: NoteType,
+      type: GraphQLNoteType,
       description: 'A single note',
       args: {
         id: { type: GraphQLNonNull(GraphQLInt) }
@@ -74,10 +77,10 @@ const RootQueryType = new GraphQLObjectType({
 
 const RootMutationType = new GraphQLObjectType({
   name: 'Mutation',
-  desction: 'Root mutation',
+  description: 'Root mutation',
   fields: () => ({
     addNote: {
-      type: NoteType,
+      type: GraphQLNoteType,
       description: 'Add a note',
       args: {
         title: { type: GraphQLNonNull(GraphQLString) },
@@ -89,12 +92,13 @@ const RootMutationType = new GraphQLObjectType({
           title: args.title,
           content: args.content
         }
-        notes.push(note)
+        notes.unshift(note)
+        console.log(`Added note ${note.id} (${note.title})`)
         return note
       }
     },
     updateNote: {
-      type: NoteType,
+      type: GraphQLNoteType,
       description: 'Update a note',
       args: {
         id: { type: GraphQLNonNull(GraphQLInt) },
@@ -102,8 +106,8 @@ const RootMutationType = new GraphQLObjectType({
         content: { type: GraphQLNonNull(GraphQLString) }
       },
       resolve: (parent: any, args: any) => {
-        const index = notes.findIndex(note => note.id = args.id)
-        if(index === -1){
+        const index = notes.findIndex(note => note.id === args.id)
+        if (index === -1) {
           throw new Error(`No note with ID of ${args.id}`)
         }
         const note = {
@@ -111,7 +115,8 @@ const RootMutationType = new GraphQLObjectType({
           title: args.title,
           content: args.content
         }
-        notes[index] = note
+        notes[index] = { ...note }
+        console.log(`Updated note ${note.id} (${note.title})`)
         return note
       }
     }
@@ -123,11 +128,8 @@ const schema = new GraphQLSchema({
   mutation: RootMutationType
 })
 
-app.use(cors());
+app.use(cors())
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql: true
-}))
+app.all('/graphql', createHandler({ schema }))
 
-app.listen(5000, () => console.log('Server is running'))
+app.listen(5000, () => { console.log('Server is running') })
