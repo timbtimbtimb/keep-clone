@@ -1,5 +1,5 @@
 # Keep Clone
-A Google Keep clone made to showcase my fullstack developper skills.
+A **Google Keep** clone made to showcase my fullstack developper skills.
 
 <div>
 <img src="https://upload.wikimedia.org/wikipedia/en/f/f4/Docker_logo.svg" style="height: 60px;"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

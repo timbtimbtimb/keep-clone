@@ -6,20 +6,26 @@ on:
       - master
 
 jobs:
-  build:
+  build_app:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@latest
-      - uses: actions/setup-node@latest
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Clean install
+      - name: Install TypeScript
+        run: npm install -g typescript
+      - name: Install app
         working-directory: ./app
         run: npm ci
       - name: Build Nuxt app
-        run: npm build
+        run: npm run build
         working-directory: ./app
+      - name: Install server
+        working-directory: ./server
+        run: npm ci
       - name: Build Express server
-        run: npm build
+        run: npm run build
         working-directory: ./server
   
+      
