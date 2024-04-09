@@ -1,6 +1,8 @@
 <script lang="ts">
 import type { NoteType } from '~/components/NotesList.vue'
-import graphQLRequest from '~/utils/graphQLRequest'
+import fetchNotes from '../utils/fetchNotes'
+import addNote from '../utils/addNote'
+import updateNote from '../utils/updateNote'
 
 export default {
   data () {
@@ -10,77 +12,42 @@ export default {
     }
   },
   async created () {
-    await this.fetchNotes()
+    await this.fetchNotesHandler()
   },
   methods: {
-    async fetchNotes () {
-      const query = `
-        {
-          notes {
-            id
-            title
-            content
-          }
-        }
-      `
-      const { notes } = await graphQLRequest(query) as { notes: NoteType[] }
+    async fetchNotesHandler () {
+      const notes = await fetchNotes()
+      if (notes == null) {
+        return
+      }
       this.notes = notes
       this.loading = false
     },
-    async updateNote (data: NoteType) {
+    async updateNoteHandler (data: NoteType) {
       const index = this.notes.findIndex((note) => note.id === data.id)
       if (index === -1) {
         console.error(`Could not find note ${data.id}`)
         return
       }
 
-      const query = `
-        mutation{
-          updateNote(
-            id: ${data.id}
-            title: "${data.title}",
-            content: "${data.content}",
-          ), {
-            id, title, content
-          }
-        }
-      `
+      const note = await updateNote(data)
 
-      try {
-        const response = await graphQLRequest(query) as { updateNote: NoteType }
-        this.notes[index] = {
-          ...response.updateNote
-        }
-        console.log(`Updated note ${data.id}`)
-      } catch (error) {
-        console.error(`Failed to update note ${data.id}: ${String(error)}`)
-      }
-    },
-    async addNote (data: NoteType) {
-      if (data.title === '' && data.content === '') {
+      if (note == null) {
         return
       }
 
-      const query = `
-        mutation{
-          addNote(
-            title: "${data.title}",
-            content: "${data.content}",
-          ), {
-            id, title, content
-          }
-        }
-      `
+      this.notes[index] = note
+    },
+    async addNoteHandler (data: NoteType) {
+      const note = await addNote(data)
 
-      try {
-        const response = await graphQLRequest(query) as { addNote: NoteType }
-        this.notes.unshift({
-          ...response.addNote
-        })
-        console.log(`Added note ${response.addNote.id}`)
-      } catch (error) {
-        console.error(`Failed to add note: ${String(error)}`)
+      if (note == null) {
+        return
       }
+
+      this.notes.unshift({
+        ...note
+      })
     }
   }
 }
@@ -88,11 +55,11 @@ export default {
 
 <template>
   <div class="NotesPage">
-    <TakeANote :add-note="addNote" />
+    <TakeANote :add-note="addNoteHandler" />
     <NotesList
       v-if="!loading"
       :notes="notes"
-      :update-note="updateNote"
+      :update-note="updateNoteHandler"
     />
   </div>
 </template>

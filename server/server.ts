@@ -119,6 +119,22 @@ const RootMutationType = new GraphQLObjectType({
         console.log(`Updated note ${note.id} (${note.title})`)
         return note
       }
+    },
+    deleteNote: {
+      type: GraphQLNoteType,
+      description: 'Delete a note',
+      args: {
+        id: { type: GraphQLNonNull(GraphQLInt) }
+      },
+      resolve: (parent: any, args: any) => {
+        const index = notes.findIndex(note => note.id === args.id)
+        if (index === -1) {
+          throw new Error(`No note with ID of ${args.id}`)
+        }
+        notes.splice(index, 1)
+        console.log(`Deleted note ${args.id} (${args.title})`)
+        return true
+      }
     }
   })
 })
