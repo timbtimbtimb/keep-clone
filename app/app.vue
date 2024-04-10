@@ -26,18 +26,21 @@ export default {
 </script>
 
 <template>
-  <div class="main">
-    <TopBar
-      :side-menu-is-small="sideMenuIsSmall"
-      :toggle-side-menu-is-small="toggleSideMenuIsSmall"
-      :set-search-is-focused="setSearchIsFocused"
-      :search-is-focused="searchIsFocused"
-    />
-    <div class="Contents">
-      <SideMenu :side-menu-is-small="sideMenuIsSmall" />
-      <NuxtPage class="Page" />
+  <TooltipProvider>
+    <div class="main">
+      <Tooltip />
+      <TopBar
+        :side-menu-is-small="sideMenuIsSmall"
+        :toggle-side-menu-is-small="toggleSideMenuIsSmall"
+        :set-search-is-focused="setSearchIsFocused"
+        :search-is-focused="searchIsFocused"
+      />
+      <div class="Contents">
+        <SideMenu :side-menu-is-small="sideMenuIsSmall" />
+        <NuxtPage class="Page" />
+      </div>
     </div>
-  </div>
+  </TooltipProvider>
 </template>
 
 <style>

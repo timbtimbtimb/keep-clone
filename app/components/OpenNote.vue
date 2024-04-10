@@ -1,4 +1,6 @@
 <script lang="ts">
+import { inject } from 'vue'
+
 export default {
   props: {
     note: {
@@ -26,6 +28,14 @@ export default {
       required: true
     }
   },
+  setup () {
+    const tooltipMethods = inject('tooltipMethods') as null | { showTooltip: () => void, hideTooltip: () => void }
+    if (tooltipMethods == null) {
+      return
+    }
+    const { showTooltip, hideTooltip } = tooltipMethods
+    return { showTooltip, hideTooltip }
+  },
   data () {
     return {
       title: this.note.title as string,
@@ -42,6 +52,9 @@ export default {
         visible: this.backroundColor,
         'not-moving': !this.animationPending
       }
+    },
+    showDeleteTooltip () {
+      return () => this.showTooltip('Delete')
     }
   },
   mounted () {
@@ -129,7 +142,7 @@ export default {
   <div
     ref="noteRef"
     :class="openNoteContainerClass"
-    @click="handleCloseClick"
+    @pointerdown="handleCloseClick"
   >
     <div
       ref="animatedFrame"
@@ -165,6 +178,7 @@ export default {
           <ImageButton
             icon="vertical-dots"
             title="New note with image"
+            @click="showDeleteTooltip"
           />
           <ImageButton
             icon="undo"
