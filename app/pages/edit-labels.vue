@@ -1,1 +1,3 @@
-<template>Edit labels</template>
+<template>
+  <div>Edit labels</div>
+</template>

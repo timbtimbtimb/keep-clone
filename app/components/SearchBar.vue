@@ -1,35 +1,55 @@
 <script lang="ts">
-import type { HTMLAttributes } from 'vue';
+import type { HTMLAttributes } from 'vue'
 
 export default {
   props: {
-    searchIsFocused: Boolean,
-    setSearchIsFocused: Function
-  },
-  methods: {
-    onBlur() {
-      this.setSearchIsFocused && this.setSearchIsFocused(false)
+    searchIsFocused: {
+      type: Boolean,
+      required: true
     },
-    onFocus() {
-      this.setSearchIsFocused && this.setSearchIsFocused(true)
+    setSearchIsFocused: {
+      type: Function,
+      default: () => {}
     }
   },
   computed: {
-    className(): HTMLAttributes['class'] {
+    className (): HTMLAttributes['class'] {
       return {
         search: true,
         focused: this.searchIsFocused
-      };
+      }
+    }
+  },
+  methods: {
+    onBlur () {
+      this.setSearchIsFocused?.(false)
     },
+    onFocus () {
+      this.setSearchIsFocused?.(true)
+    }
   }
 }
 </script>
 
 <template>
   <div :class="className">
-    <ImageButton icon="search" title="Search" />
-    <input type="text" name="search" id="search" placeholder="Search" @blur="onBlur" @focus="onFocus">
-    <ImageButton v-show="searchIsFocused" icon="close" title="Close" />
+    <ImageButton
+      icon="search"
+      title="Search"
+    />
+    <input
+      id="search"
+      type="text"
+      name="search"
+      placeholder="Search"
+      @blur="onBlur"
+      @focus="onFocus"
+    >
+    <ImageButton
+      v-show="searchIsFocused"
+      icon="close"
+      title="Close"
+    />
   </div>
 </template>
 

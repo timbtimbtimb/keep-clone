@@ -1,25 +1,50 @@
 <script lang="ts">
 export default {
-  data() {
+  props: {
+    handleClick: {
+      type: Function,
+      required: false,
+      default: () => {}
+    },
+    icon: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    class: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    disabled: {
+      type: Boolean,
+      required: false
+    }
+  },
+  data () {
     return {
       className: {
         ...(this.class != null && { [this.class]: true }),
-        ImageButton: true
+        ImageButton: true,
+        disabled: this.disabled === true
       }
     }
-  },
-  props: {
-    handleClick: Function,
-    icon: String,
-    title: String,
-    class: String
   }
 }
 </script>
 
 <template>
-  <div :class="className" @click="handleClick && handleClick()">
-    <img :src="`/${icon}.svg`" :alt="title" />
+  <div
+    :class="className"
+    @click="handleClick()"
+  >
+    <img
+      :src="`/${icon}.svg`"
+      :alt="title"
+    >
   </div>
 </template>
 
@@ -33,6 +58,10 @@ export default {
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+}
+
+.ImageButton.disabled {
+  opacity: 0.25;
 }
 
 .ImageButton:hover {

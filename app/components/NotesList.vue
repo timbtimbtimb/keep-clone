@@ -1,16 +1,23 @@
 <script lang="ts">
 export interface NoteType {
-  id: number,
-  title: string,
+  id: number
+  title: string
   content: string
 }
 
 export default {
   props: {
-    updateNote: { type: Function, required: true },
+    updateNote: {
+      type: Function,
+      required: true
+    },
+    deleteNote: {
+      type: Function,
+      required: true
+    },
     notes: {
       type: Array as () => NoteType[],
-      default: () => []
+      required: true
     }
   },
   data () {
@@ -18,21 +25,12 @@ export default {
       numberOfColumns: this.getNumberOfColumns()
     }
   },
-  methods: {
-    getNumberOfColumns () {
-      const parentRef = this.$refs.parent as HTMLElement | undefined
-      if (parentRef == null) {
-        return 0
-      }
-      this.numberOfColumns = Math.floor(parentRef.offsetWidth / 260)
-    },
-  },
   computed: {
-    columns (): { notes: NoteType[]; length: number }[] {
+    columns (): Array<{ notes: NoteType[], length: number }> {
       if (this.numberOfColumns === 0) {
         return []
       }
-      const columns: { notes: NoteType[], length: number }[] = Array.from(
+      const columns: Array<{ notes: NoteType[], length: number }> = Array.from(
         { length: this.numberOfColumns },
         () => ({ notes: [], length: 0 })
       )
@@ -50,26 +48,52 @@ export default {
     this.getNumberOfColumns()
     window.addEventListener('resize', this.getNumberOfColumns)
   },
-  beforeDestroy () {
+  beforeUnmount () {
     window.removeEventListener('resize', this.getNumberOfColumns)
   },
+  methods: {
+    getNumberOfColumns () {
+      const parentRef = this.$refs.parent as HTMLElement | undefined
+      if (parentRef == null) {
+        return 0
+      }
+      this.numberOfColumns = Math.floor(parentRef.offsetWidth / 260)
+    }
+  }
 }
 </script>
 
 <template>
-  <div class="Notes" ref="parent">
-    <div v-for="({ notes }, i) in columns" :key="i" class="column">
-      <Note v-for="(note, j) in notes" :key="j" :note="note" :updateNote="updateNote" />
+  <div
+    ref="parent"
+    class="NotesList"
+  >
+    <div
+      v-for="(column, i) in columns"
+      :key="i"
+      class="column"
+    >
+      <NoteCard
+        v-for="(note, j) in column.notes"
+        :key="j"
+        :note="note"
+        :update-note="updateNote"
+        :delete-note="deleteNote"
+      />
     </div>
   </div>
 </template>
 
 <style>
-.Notes {
+.NotesList {
   flex-grow: 1;
   display: flex;
   flex-direction: row;
   width: 100%;
   justify-content: center;
+}
+
+.NotesList .column{
+  width: 100%;
 }
 </style>

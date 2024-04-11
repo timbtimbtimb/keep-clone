@@ -1,1 +1,5 @@
-<template>Reminders</template>
+<template>
+  <div>
+    Reminders
+  </div>
+</template>

@@ -1,5 +1,9 @@
 <script lang="ts">
-import type { NoteType } from '~/components/Notes.vue'
+import type { NoteType } from '~/components/NotesList.vue'
+import fetchNotes from '../utils/fetchNotes'
+import addNote from '../utils/addNote'
+import updateNote from '../utils/updateNote'
+import deleteNote from '~/utils/deleteNote'
 
 export default {
   data () {
@@ -9,63 +13,69 @@ export default {
     }
   },
   async created () {
-    await this.fetchNotes()
+    await this.fetchNotesHandler()
   },
   methods: {
-    async fetchNotes () {
-      const query = `
-        {
-          notes {
-            id
-            title
-            content
-          }
-        }
-      `
-      try {
-        const response = await fetch('http://localhost:5000/graphql', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ query }),
-        })
-        const { data: { notes } } = await response.json()
-        this.notes = notes
-        this.loading = false
-      } catch (error) {
-        console.error('Error fetching notes:', error)
-      }
-    },
-    updateNote (data: NoteType) {
-      const index = this.notes.findIndex((note) => note.id === data.id)
-      if (index === -1) {
-        console.error(`Could not find note: ${JSON.stringify(data)}`)
+    async fetchNotesHandler () {
+      const notes = await fetchNotes()
+      if (notes == null) {
         return
       }
-      this.notes[index] = {
-        ...data,
-        id: this.notes[index].id
-      }
+      this.notes = notes
+      this.loading = false
     },
-    addNote (data: NoteType) {
-      if (data.title === '' && data.content === '') {
+    async updateNoteHandler (data: NoteType) {
+      const index = this.notes.findIndex((note) => note.id === data.id)
+      if (index === -1) {
+        console.error(`Could not find note ${data.id}`)
+        return
+      }
+
+      const note = await updateNote(data)
+
+      if (note == null) {
+        return
+      }
+
+      this.notes[index] = note
+    },
+    async addNoteHandler (data: NoteType) {
+      const note = await addNote(data)
+
+      if (note == null) {
         return
       }
 
       this.notes.unshift({
-        ...data,
-        id: Math.round(Date.now())
+        ...note
       })
+    },
+    async deleteNoteHandler (id: number) {
+      const response = await deleteNote(id)
+
+      if (!response) {
+        return
+      }
+
+      const index = this.notes.findIndex(note => note.id === id)
+      if (index === -1) {
+        throw new Error(`No note with ID of ${id}`)
+      }
+      this.notes.splice(index, 1)
     }
-  },
+  }
 }
 </script>
 
 <template>
   <div class="NotesPage">
-    <TakeANote :addNote="addNote" />
-    <Notes v-if="!loading" :notes="notes" :updateNote="updateNote" />
+    <TakeANote :add-note="addNoteHandler" />
+    <NotesList
+      v-if="!loading"
+      :notes="notes"
+      :update-note="updateNoteHandler"
+      :delete-note="deleteNoteHandler"
+    />
   </div>
 </template>
 

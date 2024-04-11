@@ -1,18 +1,41 @@
 <script lang="ts">
-import type { NoteType } from './Notes.vue'
-
+import { inject } from 'vue'
+import type { SetTooltipType } from './TooltipProvider.vue'
 
 export default {
   props: {
-    note: { type: Object as () => NoteType, required: true },
-    onClose: Function,
-    size: { type: Array, required: true },
-    animationDuration: { type: Number, required: true },
-    parentRef: { type: Object as () => unknown },
-    updateNote: { type: Function, required: true }
+    note: {
+      type: Object,
+      required: true
+    },
+    onClose: {
+      type: Function,
+      required: true
+    },
+    size: {
+      type: Array,
+      required: true
+    },
+    animationDuration: {
+      type: Number,
+      required: true
+    },
+    parentRef: {
+      type: Object,
+      required: true
+    },
+    updateNote: {
+      type: Function,
+      required: true
+    },
+    deleteNote: {
+      type: Function,
+      required: true
+    }
   },
-  mounted () {
-    this.openAnimation()
+  setup () {
+    const setTooltip = inject('setTooltip') as SetTooltipType
+    return { setTooltip }
   },
   data () {
     return {
@@ -22,6 +45,41 @@ export default {
       animationPending: false,
       animatedFrameStyle: {}
     }
+  },
+  computed: {
+    openNoteContainerClass () {
+      return {
+        OpenNote: true,
+        visible: this.backroundColor,
+        'not-moving': !this.animationPending
+      }
+    },
+    showDeleteTooltip () {
+      return (event: MouseEvent) => {
+        if (event.target == null) {
+          return
+        }
+
+        const target = event.target as HTMLElement
+        const { top, left } = target.getBoundingClientRect()
+
+        this.setTooltip({
+          position: { top, left },
+          buttons: [
+            {
+              title: 'Delete note',
+              onClick: () => {
+                this.deleteNote(this.note.id as number)
+                this.closeAnimation()
+              }
+            }
+          ]
+        })
+      }
+    }
+  },
+  mounted () {
+    this.openAnimation()
   },
   methods: {
     setAnimatedFrame (parent: HTMLElement) {
@@ -85,46 +143,83 @@ export default {
 
       this.setAnimatedFrame(parent)
       this.backroundColor = false
-
-      this.updateNote({
-        ...this.note,
-        title: this.title,
-        content: this.content
-      })
-
       setTimeout(() => {
-        this.onClose != null && this.onClose()
+        this.onClose?.()
         this.animationPending = false
       }, this.animationDuration)
     }
-  },
-  computed: {
-    openNoteContainerClass () {
-      return {
-        "OpenNote": true,
-        visible: this.backroundColor,
-        "not-moving": !this.animationPending
-      }
-    },
-  },
+  }
 }
 </script>
 
 <template>
-  <div :class=openNoteContainerClass @click="handleCloseClick" ref="noteRef">
-    <div ref="animatedFrame" class="animated-frame" :style="animatedFrameStyle">
-      <div v-if="!animationPending" class="content-container">
-        <input type="text" v-model="title" />
-        <textarea v-model="content"></textarea>
+  <div
+    ref="noteRef"
+    :class="openNoteContainerClass"
+    @pointerdown="handleCloseClick"
+  >
+    <div
+      ref="animatedFrame"
+      class="animated-frame"
+      :style="animatedFrameStyle"
+    >
+      <div
+        v-if="!animationPending"
+        class="content-container"
+      >
+        <input
+          v-model="title"
+          type="text"
+        >
+        <textarea v-model="content" />
         <div class="buttons">
-          <ImageButton icon="add-alert" title="New list" />
-          <ImageButton icon="add-person" title="New list" />
-          <ImageButton icon="palette" title="New note with drawing" />
-          <ImageButton icon="archive" title="New note with image" />
-          <ImageButton icon="vertical-dots" title="New note with image" />
-          <ImageButton icon="undo" title="New note with image" />
-          <ImageButton icon="redo" title="New note with image" />
-          <button @click="closeAnimation">Close</button>
+          <ImageButton
+            icon="add-alert"
+            title="New list"
+            :disabled="true"
+          />
+          <ImageButton
+            icon="add-person"
+            title="New list"
+            :disabled="true"
+          />
+          <ImageButton
+            icon="palette"
+            title="New note with drawing"
+            :disabled="true"
+          />
+          <ImageButton
+            icon="archive"
+            title="New note with image"
+            :disabled="true"
+          />
+          <ImageButton
+            icon="vertical-dots"
+            title="New note with image"
+            @click="showDeleteTooltip"
+          />
+          <ImageButton
+            icon="undo"
+            title="New note with image"
+            :disabled="true"
+          />
+          <ImageButton
+            icon="redo"
+            title="New note with image"
+            :disabled="true"
+          />
+          <button
+            @click="() => {
+              updateNote({
+                ...note,
+                title: title,
+                content: content
+              })
+              closeAnimation()
+            }"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>

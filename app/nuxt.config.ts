@@ -1,24 +1,29 @@
+import { defineNuxtConfig } from 'nuxt/config'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     ['@nuxtjs/google-fonts', {
-        families: {
-          "Open Sans": true,
-        }
+      families: {
+        'Open Sans': true
       }
+    }
     ]
   ],
   app: {
     head: {
-      title: "Keep",
+      title: 'Keep',
       link: [
         {
-          rel: "icon",
-          type: "image/png",
-          href: "/favicon.png"
+          rel: 'icon',
+          type: 'image/png',
+          href: '/favicon.png'
         }
       ]
     }
+  },
+  typescript: {
+    strict: true
   }
 })

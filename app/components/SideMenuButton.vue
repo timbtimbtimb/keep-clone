@@ -1,31 +1,49 @@
 <script lang="ts">
-import type { HTMLAttributes } from 'vue';
+import type { HTMLAttributes } from 'vue'
 
 export default {
   props: {
-    to: String,
-    icon: String,
-    title: String,
-    isSmall: Boolean
+    to: {
+      type: String,
+      required: true
+    },
+    icon: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    isSmall: {
+      type: Boolean,
+      required: true
+    }
   },
   computed: {
-    currentPage(): string {
+    currentPage (): string {
       return this.$route.path
     },
-    className(): HTMLAttributes['class'] {
+    className (): HTMLAttributes['class'] {
       return {
         SideMenuButton: true,
         active: this.currentPage === this.to && 'active',
         small: this.isSmall
-      };
+      }
     }
   }
 }
 </script>
 
 <template>
-  <NuxtLink :to="to" :class="className">
-    <img :src="`/${icon}.svg`" :alt="title" />
+  <NuxtLink
+    :to="to"
+    :class="className"
+  >
+    <img
+      :src="`/${icon}.svg`"
+      :alt="title"
+    >
     <span>{{ title }}</span>
   </NuxtLink>
 </template>

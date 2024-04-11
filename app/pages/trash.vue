@@ -1,1 +1,5 @@
-<template>Trash</template>
+<template>
+  <div>
+    Trash
+  </div>
+</template>
