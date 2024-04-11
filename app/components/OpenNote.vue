@@ -1,5 +1,6 @@
 <script lang="ts">
 import { inject } from 'vue'
+import type { TooltipMethodsType } from './TooltipProvider.vue'
 
 export default {
   props: {
@@ -29,12 +30,8 @@ export default {
     }
   },
   setup () {
-    const tooltipMethods = inject('tooltipMethods') as null | { showTooltip: () => void, hideTooltip: () => void }
-    if (tooltipMethods == null) {
-      return
-    }
-    const { showTooltip, hideTooltip } = tooltipMethods
-    return { showTooltip, hideTooltip }
+    const { setTooltip } = inject('tooltipMethods') as TooltipMethodsType
+    return { setTooltip }
   },
   data () {
     return {
@@ -54,7 +51,42 @@ export default {
       }
     },
     showDeleteTooltip () {
-      return () => this.showTooltip('Delete')
+      return (event: MouseEvent) => {
+        const { target } = event
+
+        if (target == null) {
+          return
+        }
+
+        const { top, left } = target.getBoundingClientRect()
+
+        this.setTooltip([
+          {
+            title: 'Delete note',
+            onClick: () => {}
+          },
+          {
+            title: 'Add label',
+            onClick: () => {}
+          },
+          {
+            title: 'Add drawing',
+            onClick: () => {}
+          },
+          {
+            title: 'Make a copy',
+            onClick: () => {}
+          },
+          {
+            title: 'Copy to Google Docs',
+            onClick: () => {}
+          },
+          {
+            title: 'Version history',
+            onClick: () => {}
+          }
+        ])
+      }
     }
   },
   mounted () {

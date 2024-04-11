@@ -1,31 +1,31 @@
 <script lang="ts">
 import { ref } from 'vue'
 
-export const tooltipState = ref({
-  show: false,
-  text: ''
-})
+export interface ButtonType {
+  title: string
+  onClick: () => void
+}
+
+export interface TooltipMethodsType {
+  setTooltip: (buttons: ButtonType[]) => void
+}
+
+export const tooltip = ref<ButtonType[]>([])
 
 export const tooltipMethods = {
-  showTooltip (text) {
-    tooltipState.value.show = true
-    tooltipState.value.text = text
-  },
-  hideTooltip () {
-    console.log('hideTooltip')
-    tooltipState.value.show = false
-    tooltipState.value.text = ''
+  setTooltip (buttons: ButtonType[]) {
+    tooltip.value = buttons
   }
 }
 
 export default {
   provide: {
-    tooltipState,
+    tooltip,
     tooltipMethods
   }
 }
 </script>
 
 <template>
-  <div><slot></slot></div>
+  <div><slot /></div>
 </template>
