@@ -135,6 +135,7 @@ export default {
   padding: 0.5rem;
   cursor: default;
   user-select: none;
+  width: 100%;
 }
 
 .NoteCard>div {

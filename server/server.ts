@@ -88,7 +88,7 @@ const RootMutationType = new GraphQLObjectType({
       },
       resolve: (parent: any, args: any) => {
         const note = {
-          id: Math.max(...notes.map((note: NoteType): number => note.id)) + 1,
+          id: Math.max(0, ...notes.map((note: NoteType): number => note.id)) + 1,
           title: args.title,
           content: args.content
         }

@@ -92,4 +92,8 @@ export default {
   width: 100%;
   justify-content: center;
 }
+
+.NotesList .column{
+  width: 100%;
+}
 </style>
