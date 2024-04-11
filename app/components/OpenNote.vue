@@ -196,18 +196,22 @@ export default {
           <ImageButton
             icon="add-alert"
             title="New list"
+            :disabled="true"
           />
           <ImageButton
             icon="add-person"
             title="New list"
+            :disabled="true"
           />
           <ImageButton
             icon="palette"
             title="New note with drawing"
+            :disabled="true"
           />
           <ImageButton
             icon="archive"
             title="New note with image"
+            :disabled="true"
           />
           <ImageButton
             icon="vertical-dots"
@@ -217,10 +221,12 @@ export default {
           <ImageButton
             icon="undo"
             title="New note with image"
+            :disabled="true"
           />
           <ImageButton
             icon="redo"
             title="New note with image"
+            :disabled="true"
           />
           <button @click="closeAnimation">
             Close

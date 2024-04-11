@@ -44,18 +44,22 @@ export default {
         class="search-button"
         icon="search"
         title="Search"
+        :disabled="true"
       />
       <ImageButton
         icon="refresh"
         title="Refresh"
+        :disabled="true"
       />
       <ImageButton
         icon="view"
         title="View"
+        :disabled="true"
       />
       <ImageButton
         icon="settings"
         title="Settings"
+        :disabled="true"
       />
     </div>
   </div>

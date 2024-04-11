@@ -73,6 +73,7 @@ export default {
       <ImageButton
         icon="pin"
         title="Pin"
+        :disabled="true"
       />
     </div>
     <div class="content">
@@ -87,46 +88,56 @@ export default {
         v-show="!focused"
         icon="checked"
         title="New list"
+        :disabled="true"
       />
       <ImageButton
         v-show="!focused"
         icon="paint"
         title="New note with drawing"
+        :disabled="true"
       />
       <ImageButton
         v-show="!focused"
         icon="image"
         title="New note with image"
+        :disabled="true"
       />
     </div>
     <div class="buttons">
       <ImageButton
         icon="add-alert"
         title="New list"
+        :disabled="true"
       />
       <ImageButton
         icon="add-person"
         title="New list"
+        :disabled="true"
       />
       <ImageButton
         icon="palette"
         title="New note with drawing"
+        :disabled="true"
       />
       <ImageButton
         icon="archive"
         title="New note with image"
+        :disabled="true"
       />
       <ImageButton
         icon="vertical-dots"
         title="New note with image"
+        :disabled="true"
       />
       <ImageButton
         icon="undo"
         title="New note with image"
+        :disabled="true"
       />
       <ImageButton
         icon="redo"
         title="New note with image"
+        :disabled="true"
       />
       <button @click="() => onClose()">
         Close

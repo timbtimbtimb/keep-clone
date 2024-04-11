@@ -116,18 +116,22 @@ export default {
         <ImageButton
           icon="add-alert"
           title="New list"
+          :disabled="true"
         />
         <ImageButton
           icon="add-person"
           title="New list"
+          :disabled="true"
         />
         <ImageButton
           icon="palette"
           title="New note with drawing"
+          :disabled="true"
         />
         <ImageButton
           icon="archive"
           title="New note with image"
+          :disabled="true"
         />
         <ImageButton
           icon="vertical-dots"

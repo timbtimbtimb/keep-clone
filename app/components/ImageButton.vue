@@ -1,16 +1,18 @@
 <script lang="ts">
 export default {
   props: {
-    handleClick: { type: Function, default: () => {} },
-    icon: { type: String, default: '' },
-    title: { type: String, default: '' },
-    class: { type: String, default: '' }
+    handleClick: { type: Function, required: true },
+    icon: { type: String, required: true },
+    title: { type: String, required: true },
+    class: { type: String, required: true },
+    disabled: { type: Boolean, required: false }
   },
   data () {
     return {
       className: {
         ...(this.class != null && { [this.class]: true }),
-        ImageButton: true
+        ImageButton: true,
+        disabled: this.disabled === true
       }
     }
   }
@@ -39,6 +41,10 @@ export default {
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+}
+
+.ImageButton.disabled {
+  opacity: 0.25;
 }
 
 .ImageButton:hover {
