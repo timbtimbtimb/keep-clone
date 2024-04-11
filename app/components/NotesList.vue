@@ -7,7 +7,14 @@ export interface NoteType {
 
 export default {
   props: {
-    updateNote: { type: Function, required: true },
+    updateNote: {
+      type: Function,
+      required: true
+    },
+    deleteNote: {
+      type: Function,
+      required: true
+    },
     notes: {
       type: Array as () => NoteType[],
       required: true
@@ -71,6 +78,7 @@ export default {
         :key="j"
         :note="note"
         :update-note="updateNote"
+        :delete-note="deleteNote"
       />
     </div>
   </div>

@@ -18,10 +18,10 @@ export default {
     }
   },
   mounted () {
-    document.addEventListener('pointerdown', this.handleClickOutside)
+    document.addEventListener('pointerdown', this.handleClickOutside as () => void)
   },
   beforeUnmount () {
-    document.removeEventListener('pointerdown', this.handleClickOutside)
+    document.removeEventListener('pointerdown', this.handleClickOutside as () => void)
   },
   methods: {
     handleClickOutside (event: MouseEvent) {
@@ -29,11 +29,14 @@ export default {
       event.stopPropagation()
       const parentRef = this.$refs.parent as HTMLElement | undefined
       if (parentRef != null && !parentRef.contains(event.target as HTMLElement)) {
-        this.setTooltip({
-          position: { top: 0, left: 0 },
-          buttons: []
-        })
+        this.closeTooltip()
       }
+    },
+    closeTooltip () {
+      this.setTooltip({
+        position: { top: 0, left: 0 },
+        buttons: []
+      })
     }
   }
 }
@@ -48,6 +51,10 @@ export default {
     <li
       v-for="(button, index) in tooltip.buttons"
       :key="index"
+      @click="() => {
+        button.onClick()
+        closeTooltip()
+      }"
     >
       {{ button.title }}
     </li>

@@ -3,6 +3,7 @@ import type { NoteType } from '~/components/NotesList.vue'
 import fetchNotes from '../utils/fetchNotes'
 import addNote from '../utils/addNote'
 import updateNote from '../utils/updateNote'
+import deleteNote from '~/utils/deleteNote'
 
 export default {
   data () {
@@ -48,6 +49,19 @@ export default {
       this.notes.unshift({
         ...note
       })
+    },
+    async deleteNoteHandler (id: number) {
+      const response = await deleteNote(id)
+
+      if (!response) {
+        return
+      }
+
+      const index = this.notes.findIndex(note => note.id === id)
+      if (index === -1) {
+        throw new Error(`No note with ID of ${id}`)
+      }
+      this.notes.splice(index, 1)
     }
   }
 }
@@ -60,6 +74,7 @@ export default {
       v-if="!loading"
       :notes="notes"
       :update-note="updateNoteHandler"
+      :delete-note="deleteNoteHandler"
     />
   </div>
 </template>

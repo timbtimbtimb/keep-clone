@@ -12,6 +12,10 @@ export default {
     updateNote: {
       type: Function,
       required: true
+    },
+    deleteNote: {
+      type: Function,
+      required: true
     }
   },
   setup () {
@@ -51,27 +55,9 @@ export default {
           buttons: [
             {
               title: 'Delete note',
-              onClick: () => {}
-            },
-            {
-              title: 'Add label',
-              onClick: () => {}
-            },
-            {
-              title: 'Add drawing',
-              onClick: () => {}
-            },
-            {
-              title: 'Make a copy',
-              onClick: () => {}
-            },
-            {
-              title: 'Copy to Google Docs',
-              onClick: () => {}
-            },
-            {
-              title: 'Version history',
-              onClick: () => {}
+              onClick: () => {
+                this.deleteNote(this.note.id as number)
+              }
             }
           ]
         })
@@ -102,6 +88,7 @@ export default {
     :animation-duration="300"
     :size="openWindowSize"
     :update-note="updateNote"
+    :delete-note="deleteNote"
   />
   <div :class="noteClass">
     <div ref="parent">

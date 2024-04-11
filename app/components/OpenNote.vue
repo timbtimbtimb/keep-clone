@@ -27,6 +27,10 @@ export default {
     updateNote: {
       type: Function,
       required: true
+    },
+    deleteNote: {
+      type: Function,
+      required: true
     }
   },
   setup () {
@@ -64,27 +68,10 @@ export default {
           buttons: [
             {
               title: 'Delete note',
-              onClick: () => {}
-            },
-            {
-              title: 'Add label',
-              onClick: () => {}
-            },
-            {
-              title: 'Add drawing',
-              onClick: () => {}
-            },
-            {
-              title: 'Make a copy',
-              onClick: () => {}
-            },
-            {
-              title: 'Copy to Google Docs',
-              onClick: () => {}
-            },
-            {
-              title: 'Version history',
-              onClick: () => {}
+              onClick: () => {
+                this.deleteNote(this.note.id as number)
+                this.closeAnimation()
+              }
             }
           ]
         })
@@ -156,13 +143,6 @@ export default {
 
       this.setAnimatedFrame(parent)
       this.backroundColor = false
-
-      this.updateNote({
-        ...this.note,
-        title: this.title,
-        content: this.content
-      })
-
       setTimeout(() => {
         this.onClose?.()
         this.animationPending = false
@@ -228,7 +208,16 @@ export default {
             title="New note with image"
             :disabled="true"
           />
-          <button @click="closeAnimation">
+          <button
+            @click="() => {
+              updateNote({
+                ...note,
+                title: title,
+                content: content
+              })
+              closeAnimation()
+            }"
+          >
             Close
           </button>
         </div>
