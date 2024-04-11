@@ -6,26 +6,41 @@ export interface ButtonType {
   onClick: () => void
 }
 
-export interface TooltipMethodsType {
-  setTooltip: (buttons: ButtonType[]) => void
+export interface TooltipType {
+  buttons: ButtonType[]
+  position: { top: number, left: number }
 }
 
-export const tooltip = ref<ButtonType[]>([])
+export type SetTooltipType = (data: TooltipType) => void
 
-export const tooltipMethods = {
-  setTooltip (buttons: ButtonType[]) {
-    tooltip.value = buttons
+export const tooltip = ref<TooltipType>({
+  buttons: [],
+  position: { top: 0, left: 0 }
+})
+
+export const setTooltip: SetTooltipType = ({ buttons, position }) => {
+  tooltip.value = {
+    buttons,
+    position
   }
 }
 
 export default {
   provide: {
     tooltip,
-    tooltipMethods
+    setTooltip
+  },
+  computed: {
+    tooltipVisible () {
+      return tooltip.value.buttons.length > 0
+    }
   }
 }
 </script>
 
 <template>
-  <div><slot /></div>
+  <div ref="parent">
+    <Tooltip v-if="tooltipVisible" />
+    <slot />
+  </div>
 </template>

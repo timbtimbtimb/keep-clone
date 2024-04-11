@@ -1,6 +1,6 @@
 <script lang="ts">
 import { inject } from 'vue'
-import type { TooltipMethodsType } from './TooltipProvider.vue'
+import type { SetTooltipType } from './TooltipProvider.vue'
 
 export default {
   props: {
@@ -30,7 +30,7 @@ export default {
     }
   },
   setup () {
-    const { setTooltip } = inject('tooltipMethods') as TooltipMethodsType
+    const setTooltip = inject('setTooltip') as SetTooltipType
     return { setTooltip }
   },
   data () {
@@ -52,40 +52,42 @@ export default {
     },
     showDeleteTooltip () {
       return (event: MouseEvent) => {
-        const { target } = event
-
-        if (target == null) {
+        if (event.target == null) {
           return
         }
 
+        const target = event.target as HTMLElement
         const { top, left } = target.getBoundingClientRect()
 
-        this.setTooltip([
-          {
-            title: 'Delete note',
-            onClick: () => {}
-          },
-          {
-            title: 'Add label',
-            onClick: () => {}
-          },
-          {
-            title: 'Add drawing',
-            onClick: () => {}
-          },
-          {
-            title: 'Make a copy',
-            onClick: () => {}
-          },
-          {
-            title: 'Copy to Google Docs',
-            onClick: () => {}
-          },
-          {
-            title: 'Version history',
-            onClick: () => {}
-          }
-        ])
+        this.setTooltip({
+          position: { top, left },
+          buttons: [
+            {
+              title: 'Delete note',
+              onClick: () => {}
+            },
+            {
+              title: 'Add label',
+              onClick: () => {}
+            },
+            {
+              title: 'Add drawing',
+              onClick: () => {}
+            },
+            {
+              title: 'Make a copy',
+              onClick: () => {}
+            },
+            {
+              title: 'Copy to Google Docs',
+              onClick: () => {}
+            },
+            {
+              title: 'Version history',
+              onClick: () => {}
+            }
+          ]
+        })
       }
     }
   },

@@ -1,5 +1,7 @@
 <script lang="ts">
+import { inject } from 'vue'
 import type { NoteType } from './NotesList.vue'
+import type { SetTooltipType } from './TooltipProvider.vue'
 
 export default {
   props: {
@@ -11,6 +13,10 @@ export default {
       type: Function,
       required: true
     }
+  },
+  setup () {
+    const setTooltip = inject('setTooltip') as SetTooltipType
+    return { setTooltip }
   },
   data () {
     return {
@@ -30,6 +36,46 @@ export default {
         window.innerWidth / 2,
         window.innerHeight / 2
       ]
+    },
+    showDeleteTooltip () {
+      return (event: MouseEvent) => {
+        if (event.target == null) {
+          return
+        }
+
+        const target = event.target as HTMLElement
+        const { top, left } = target.getBoundingClientRect()
+
+        this.setTooltip({
+          position: { top, left },
+          buttons: [
+            {
+              title: 'Delete note',
+              onClick: () => {}
+            },
+            {
+              title: 'Add label',
+              onClick: () => {}
+            },
+            {
+              title: 'Add drawing',
+              onClick: () => {}
+            },
+            {
+              title: 'Make a copy',
+              onClick: () => {}
+            },
+            {
+              title: 'Copy to Google Docs',
+              onClick: () => {}
+            },
+            {
+              title: 'Version history',
+              onClick: () => {}
+            }
+          ]
+        })
+      }
     }
   },
   methods: {
@@ -86,7 +132,7 @@ export default {
         <ImageButton
           icon="vertical-dots"
           title="New note with image"
-          floating-button="Delete"
+          @click="showDeleteTooltip"
         />
       </div>
     </div>

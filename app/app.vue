@@ -28,7 +28,6 @@ export default {
 <template>
   <TooltipProvider>
     <div class="main">
-      <Tooltip />
       <TopBar
         :side-menu-is-small="sideMenuIsSmall"
         :toggle-side-menu-is-small="toggleSideMenuIsSmall"
