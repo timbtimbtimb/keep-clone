@@ -21,11 +21,21 @@ jobs:
       - name: Build Nuxt app
         run: npm run build
         working-directory: ./app
+  
+  build_server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install TypeScript
+        run: npm install -g typescript
       - name: Install server
         working-directory: ./server
         run: npm ci
       - name: Build Express server
         run: npm run build
         working-directory: ./server
-  
+        
       
